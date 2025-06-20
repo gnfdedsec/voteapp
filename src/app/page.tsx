@@ -31,7 +31,7 @@ const CHOICES = [
   "แบบที่ 5",
   "แบบที่ 6",
   "แบบที่ 7",
-  "ฉันไม่มีความคิดเห็นใดๆ",
+  "ฉันไม่มีความเห็นใดๆ",
 ];
 
 export default function Home() {
@@ -141,7 +141,7 @@ export default function Home() {
           </h1>
           <div className="w-full text-center mt-2">
             <span className={`text-xs sm:text-sm font-normal text-[#000000] drop-shadow ${sarabun.variable}`} style={{ fontFamily: 'Sarabun, sans-serif' }}>
-              ENKKU VOICE SYSTEM โพลสำรวจ ความคิดเห็นเกี่ยวกับ ENKKU
+              ENKKU VOICE SYSTEM โพลสำรวจ ความคิดเห็นเกี่ยวกับ ENKKU เท่านั้น
             </span>
           </div>
           <style>{`
@@ -179,7 +179,7 @@ export default function Home() {
         >
           <span className="inline-flex items-center gap-2 text-black" style={{ fontFamily: 'Sarabun, sans-serif' }}>
             <FaRegLightbulb size={45} color="#000000" />
-            สำหรับคณะผู้บริหาร คณะวิศวกรรมศาสตร์  มข. <br/>
+            สำรวจความคิดเห็นของคณะผู้บริหาร คณะวิศวกรรมศาสตร์  มข. <br/>
           </span>
           <span className="text-black" style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '1.2rem', fontWeight: 100 }}>
             1.เลือกดูแบบโครงสร้างเว็บคณะ (ธีม)  เว็บไซต์คณะวิศวกรรม มข.ที่กำลังจะพัฒนา ที่ท่านชื่นชอบมากที่สุด 2 แบบ
@@ -261,6 +261,16 @@ export default function Home() {
             >
               โหวต
             </button>
+            {/* ปุ่มทิปผู้สร้างระบบ */}
+            <a
+              href="https://www.buymeacoffee.com/gnfdedsec" // เปลี่ยนลิงก์นี้เป็น PromptPay หรือช่องทางที่ต้องการได้
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-4 inline-flex items-center gap-2 px-6 py-2 bg-yellow-400 text-black font-bold rounded-full shadow hover:bg-yellow-500 transition-all text-lg"
+              style={{ textDecoration: 'none' }}
+            >
+              <span role="img" aria-label="tip">☕</span> ให้ทิปผู้สร้างระบบโหวต
+            </a>
           </>
         ) : (
           <div className="w-full flex flex-col items-center gap-6">
@@ -288,6 +298,16 @@ export default function Home() {
             >
               โหวตใหม่
             </button>
+            {/* ปุ่มทิปผู้สร้างระบบ (แสดงหลังผลโหวต) */}
+            <a
+              href="https://www.buymeacoffee.com/gnfdedsec" // เปลี่ยนลิงก์นี้เป็น PromptPay หรือช่องทางที่ต้องการได้
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-4 inline-flex items-center gap-2 px-6 py-2 bg-yellow-400 text-black font-bold rounded-full shadow hover:bg-yellow-500 transition-all text-lg"
+              style={{ textDecoration: 'none' }}
+            >
+              <span role="img" aria-label="tip">☕</span> ให้ทิปผู้สร้างระบบโหวต
+            </a>
           </div>
         )}
       </div>
