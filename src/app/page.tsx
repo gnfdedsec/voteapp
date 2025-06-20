@@ -5,6 +5,24 @@ import { BiNetworkChart } from "react-icons/bi";
 import { FaRegThumbsUp } from "react-icons/fa";
 import { FaRegLightbulb } from "react-icons/fa";
 import { MdHowToVote } from "react-icons/md";
+import { Inter, Roboto_Mono, Sarabun } from "next/font/google";
+
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin"],
+});
+
+const robotoMono = Roboto_Mono({
+  variable: "--font-roboto-mono",
+  subsets: ["latin"],
+});
+
+const sarabun = Sarabun({
+  subsets: ["thai", "latin"],
+  weight: ["400", "700"],
+  variable: "--font-sarabun",
+});
+
 const CHOICES = [
   "แบบที่ 1",
   "แบบที่ 2",
@@ -13,7 +31,7 @@ const CHOICES = [
   "แบบที่ 5",
   "แบบที่ 6",
   "แบบที่ 7",
-  "งดแสดงความคิดเห็น",
+  "ฉันไม่มีความคิดเห็นใดๆ",
 ];
 
 export default function Home() {
@@ -46,12 +64,12 @@ export default function Home() {
 
   const handleSelect = (idx: number) => {
     if (idx === 7) {
-      // ถ้าเลือก 'งดแสดงความคิดเห็น' ให้เลือกได้แค่ปุ่มเดียว
+      // ถ้าเลือก 'ฉันไม่มีความคิดเห็นใดๆ' ให้เลือกได้แค่ปุ่มเดียว
       setSelected(selected.includes(7) ? [] : [7]);
     } else {
       // ถ้าเลือกตัวเลือกอื่น
       if (selected.includes(7)) {
-        // ถ้าเลือก 'งดแสดงความคิดเห็น' อยู่ ให้เปลี่ยนเป็นตัวเลือกใหม่
+        // ถ้าเลือก 'ฉันไม่มีความคิดเห็นใดๆ' อยู่ ให้เปลี่ยนเป็นตัวเลือกใหม่
         setSelected([idx]);
       } else if (selected.includes(idx)) {
         setSelected(selected.filter((i) => i !== idx));
@@ -122,7 +140,9 @@ export default function Home() {
             </span>
           </h1>
           <div className="w-full text-center mt-2">
-            <span className="text-base sm:text-xl font-normal text-[#000000] drop-shadow"> ENKKU  VOICE  SYSTEM ระบบโพลสำรวจ ความคิดเห็นของ ENKKU </span>
+            <span className={`text-xs sm:text-sm font-normal text-[#000000] drop-shadow ${sarabun.variable}`} style={{ fontFamily: 'Sarabun, sans-serif' }}>
+              ENKKU VOICE SYSTEM โพลสำรวจ ความคิดเห็นเกี่ยวกับ ENKKU
+            </span>
           </div>
           <style>{`
             @keyframes neon-line-blink {
@@ -154,17 +174,18 @@ export default function Home() {
       <div className="bg-white/90 shadow-xl rounded-2xl px-8 py-10 w-full max-w-xl flex flex-col items-center gap-8 border-t-4 border-[#800000]">
         <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@700&display=swap" rel="stylesheet" />
         <h2
-          className="text-3xl font-extrabold mb-2 drop-shadow"
-          style={{ color: '#000000', fontFamily: 'Sarabun, sans-serif' }}
+          className={`text-3xl font-extrabold mb-2 drop-shadow text-black ${sarabun.variable}`}
+          style={{ fontFamily: 'Sarabun, sans-serif' }}
         >
-          <span className="inline-flex items-center gap-2">
-            <PiNewspaperThin size={45} color="#000000" />
+          <span className="inline-flex items-center gap-2 text-black" style={{ fontFamily: 'Sarabun, sans-serif' }}>
+            <FaRegLightbulb size={45} color="#000000" />
             สำหรับคณะผู้บริหาร คณะวิศวกรรมศาสตร์  มข. <br/>
           </span>
-          <span style={{ fontSize: '1.2rem', color: '#000', fontWeight: 100, fontFamily: 'sarabun' }}>
-            กรุณาโหวตแบบโครงสร้าง (ธีม)  เว็บไซต์คณะวิศวกรรม มข.ที่กำลังจะพัฒนา ที่ท่านชื่นชอบมากที่สุด 2 แบบ<br/>
+          <span className="text-black" style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '1.2rem', fontWeight: 100 }}>
+            1.เลือกดูแบบโครงสร้างเว็บคณะ (ธีม)  เว็บไซต์คณะวิศวกรรม มข.ที่กำลังจะพัฒนา ที่ท่านชื่นชอบมากที่สุด 2 แบบ
           </span>
         </h2>
+ 
         <div className="w-full mt-4 grid grid-cols-1 sm:grid-cols-3 gap-6">
           {[1,2,3,4,5,6,7].map((num) => {
             const links = [
@@ -210,9 +231,10 @@ export default function Home() {
         </div>
         {results === null ? (
           <>
-            <div className="text-center mb-4 inline-flex items-center gap-2 justify-center">
-              <MdHowToVote size={24} className="text-[#800000]" />
-              เลือกโครงสร้างเว็บที่ท่านชื่นชอบที่สุด 2 แบบ
+            <div className="text-center mb-4 inline-flex items-center gap-2 justify-center text-black">
+              <span className={`text-black ${sarabun.variable}`} style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '1.2rem', fontWeight: 100 }}>
+                2. ล็อกอินด้วย อีเมล์ kku โหวตแบบเว็บที่ท่านชื่นชอบที่สุด 2 แบบ
+              </span>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
               {CHOICES.map((choice, idx) => (
