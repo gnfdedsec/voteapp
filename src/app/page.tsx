@@ -121,6 +121,9 @@ export default function Home() {
               <span className="pointer-events-none absolute inset-0 z-10 neon-sweep-effect" aria-hidden="true"></span>
             </span>
           </h1>
+          <div className="w-full text-center mt-2">
+            <span className="text-base sm:text-xl font-normal text-[#000000] drop-shadow"> ENKKU  VOICE  SYSTEM ระบบโพลสำรวจ ความคิดเห็นของ ENKKU </span>
+          </div>
           <style>{`
             @keyframes neon-line-blink {
               0%, 100% { filter: brightness(1.1); }
