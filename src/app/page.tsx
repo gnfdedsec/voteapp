@@ -16,7 +16,17 @@ const CHOICES = [
 ];
 
 export default function Home() {
-  const { user, signInWithGoogle, signOut, loading, hasVoted, userVotes, checkVoteStatus } = useAuth();
+  // Make sure signOut is properly destructured from useAuth
+  const { 
+    user, 
+    signInWithGoogle, 
+    signOut, // Ensure this exists in your AuthContext
+    loading, 
+    hasVoted, 
+    userVotes, 
+    checkVoteStatus 
+  } = useAuth();
+
   const [selected, setSelected] = useState<number[]>([]);
   const [results, setResults] = useState<number[] | null>(null);
   const [mounted, setMounted] = useState(false);
@@ -209,6 +219,17 @@ export default function Home() {
     setSelected([]);
     setMessage('');
   };
+
+  // Add a fallback signOut function if it's not available from context
+  const handleSignOut = async () => {
+    if (signOut) {
+      await signOut();
+    } else {
+      // Fallback: direct supabase signout
+      await supabase.auth.signOut();
+      window.location.reload();
+    }
+  };
   
   if (!mounted) {
     return (
@@ -306,7 +327,7 @@ export default function Home() {
                   ดูผลทั้งหมด
                 </Link>
                 <button
-                  onClick={signOut}
+                  onClick={handleSignOut}
                   className="px-4 py-2 text-sm bg-red-500 text-white rounded-lg hover:bg-red-600 transition-all cursor-pointer"
                 >
                   ออกจากระบบ
@@ -454,7 +475,7 @@ export default function Home() {
             )}
           </>
         )}
-      </div>
+</div>
     </div>
   );
 }
