@@ -222,13 +222,8 @@ export default function Home() {
 
   // Add a fallback signOut function if it's not available from context
   const handleSignOut = async () => {
-    if (signOut) {
-      await signOut();
-    } else {
-      // Fallback: direct supabase signout
-      await supabase.auth.signOut();
-      window.location.reload();
-    }
+    await supabase.auth.signOut();
+    window.location.reload();
   };
   
   if (!mounted) {
