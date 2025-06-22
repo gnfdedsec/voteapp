@@ -323,9 +323,9 @@ export default function Home() {
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                <Link href="/admin/results" className="px-4 py-2 text-sm bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all">
+                {/* <Link href="/admin/results" className="px-4 py-2 text-sm bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all">
                   ดูผลทั้งหมด
-                </Link>
+                </Link> */}
                 <button
                   onClick={handleSignOut}
                   className="px-4 py-2 text-sm bg-red-500 text-white rounded-lg hover:bg-red-600 transition-all cursor-pointer"
