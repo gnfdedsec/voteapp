@@ -20,22 +20,9 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (user && !loading) {
-      setIsChecking(true);
-      isEmailAllowed(user.email!)
-        .then((allowed) => {
-          if (allowed) {
-            router.push('/');
-          } else {
-            setError('อีเมลของคุณไม่ได้รับอนุญาตให้เข้าร่วมการโหวตนี้');
-            // Log out the user to allow them to try another account
-            supabase.auth.signOut();
-          }
-        })
-        .finally(() => {
-          setIsChecking(false);
-        });
+      router.push('/');
     }
-  }, [user, loading, router, isEmailAllowed]);
+  }, [user, loading, router]);
 
   const handleGoogleLogin = async () => {
     const { error } = await supabase.auth.signInWithOAuth({
