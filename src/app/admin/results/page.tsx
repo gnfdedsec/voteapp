@@ -38,46 +38,103 @@ export default function AdminResultsPage() {
     }
 
     if (!user) {
-      // Don't do anything if there's no user yet.
-      // The authLoading check will handle showing the loading spinner.
       return;
     }
     
+    let isMounted = true;
     const controller = new AbortController();
     const signal = controller.signal;
 
     const fetchVotedUsers = async () => {
+      if (!isMounted) return;
+      
       setLoading(true);
       setError(null);
       try {
-        const { data, error } = await supabase
+        console.log('Fetching voted users...');
+        
+        // Try to query the voted_users view first
+        let { data, error } = await supabase
           .from('voted_users')
           .select('*')
           .order('created_at', { ascending: false })
           .abortSignal(signal);
 
-        if (error) {
-          // Re-throw if it's not an AbortError
+        console.log('Supabase response from voted_users view:', { data, error });
+
+        // If view doesn't exist, fallback to direct table query
+        if (error && error.message.includes('relation "voted_users" does not exist')) {
+          console.log('voted_users view not found, trying direct table query...');
+          
+          const { data: votesData, error: votesError } = await supabase
+            .from('votes')
+            .select(`
+              user_id,
+              choice_1,
+              choice_2,
+              is_no_opinion,
+              created_at,
+              user_profiles!inner (
+                email,
+                full_name
+              )
+            `)
+            .order('created_at', { ascending: false })
+            .abortSignal(signal);
+
+          console.log('Direct table query response:', { votesData, votesError });
+
+          if (votesError) {
+            throw votesError;
+          }
+
+          // Transform the data from direct table query
+          data = votesData?.map((item: any) => ({
+            user_id: item.user_id,
+            email: item.user_profiles.email,
+            full_name: item.user_profiles.full_name,
+            choice_1: item.choice_1,
+            choice_2: item.choice_2,
+            is_no_opinion: item.is_no_opinion,
+            created_at: item.created_at
+          })) || [];
+        } else if (error) {
+          console.error('Supabase error:', error);
           if (error.name !== 'AbortError') {
             throw error;
           }
-        } else {
-            setVotedUsers(data || []);
+        }
+
+        if (data && isMounted) {
+          console.log('Data received:', data);
+          // Transform the data to match our interface
+          const transformedData = data?.map((item: any) => ({
+            user_id: item.user_id,
+            email: item.email,
+            full_name: item.full_name,
+            choice_1: item.choice_1,
+            choice_2: item.choice_2,
+            is_no_opinion: item.is_no_opinion,
+            created_at: item.created_at
+          })) || [];
+          
+          console.log('Transformed data:', transformedData);
+          setVotedUsers(transformedData);
         }
       } catch (err: any) {
-        // Catch re-thrown errors and other exceptions
-        if (err.name !== 'AbortError') {
+        console.error('Error details:', err);
+        if (err.name !== 'AbortError' && isMounted) {
             console.error("Error fetching voted users:", err);
             if (err.message.includes('Auth session missing')) {
                 setError('เซสชั่นหมดอายุ กรุณาเข้าสู่ระบบใหม่อีกครั้ง');
+            } else if (err.message.includes('relation "voted_users" does not exist')) {
+                setError('ตาราง voted_users ยังไม่ถูกสร้าง กรุณาติดต่อผู้ดูแลระบบ');
             } else {
                 setError(`ไม่สามารถดึงข้อมูลได้: ${err.message}`);
             }
         }
       } finally {
-        // Only set loading to false if the request was not aborted
-        // because another one is about to start.
-        if (!signal.aborted) {
+        if (!signal.aborted && isMounted) {
             setLoading(false);
         }
       }
@@ -86,6 +143,7 @@ export default function AdminResultsPage() {
     fetchVotedUsers();
 
     return () => {
+      isMounted = false;
       controller.abort();
     };
   }, [user, authLoading, router]);

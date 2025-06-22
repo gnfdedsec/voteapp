@@ -16,7 +16,7 @@ const CHOICES = [
 ];
 
 export default function Home() {
-  const { user, loading, signInWithGoogle, signOut, hasVoted, userVotes, checkVoteStatus } = useAuth();
+  const { user, signInWithGoogle, loading, hasVoted, userVotes, checkVoteStatus } = useAuth();
   const [selected, setSelected] = useState<number[]>([]);
   const [results, setResults] = useState<number[] | null>(null);
   const [mounted, setMounted] = useState(false);
@@ -148,6 +148,29 @@ export default function Home() {
     setMessage('');
 
     try {
+      // Step 1: Ensure user profile exists
+      const { data: profile, error: profileError } = await supabase
+        .from('user_profiles')
+        .select('id')
+        .eq('id', user.id)
+        .single();
+
+      if (profileError && profileError.code === 'PGRST116') {
+        // Profile does not exist, so create it
+        const { error: insertError } = await supabase.from('user_profiles').insert({
+          id: user.id,
+          email: user.email,
+          full_name: user.user_metadata?.full_name,
+          avatar_url: user.user_metadata?.avatar_url,
+        });
+        if (insertError) {
+          throw new Error(`Failed to create user profile: ${insertError.message}`);
+        }
+      } else if (profileError) {
+        throw profileError;
+      }
+
+      // Step 2: Insert the vote
       const voteData = {
         user_id: user.id,
         choice_1: selected[0],

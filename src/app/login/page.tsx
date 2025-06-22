@@ -13,7 +13,7 @@ const sarabun = Sarabun({
 });
 
 export default function LoginPage() {
-  const { user, signInWithGoogle, isEmailAllowed, loading } = useAuth();
+  const { user, signInWithGoogle, loading } = useAuth();
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [isChecking, setIsChecking] = useState(false);

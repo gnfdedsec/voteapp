@@ -68,10 +68,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signOut = async () => {
     try {
-      const { error } = await supabase.auth.signOut();
+      // เช็ค session ก่อน (optional)
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        // ถ้าไม่มี session แล้ว ให้ reload หน้า หรือ redirect ไป login ได้เลย
+        window.location.reload();
+        return;
+      }
+      // ใช้ local scope หรือไม่ต้องใส่ scope
+      const { error } = await supabase.auth.signOut({ scope: 'local' });
       if (error) throw error;
     } catch (error) {
       console.error('Error signing out:', error);
+      // fallback: reload หน้า
+      window.location.reload();
     }
   };
 
