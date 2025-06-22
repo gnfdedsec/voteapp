@@ -16,7 +16,7 @@ const CHOICES = [
 ];
 
 export default function Home() {
-  const { user, signInWithGoogle, loading, hasVoted, userVotes, checkVoteStatus } = useAuth();
+  const { user, signInWithGoogle, signOut, loading, hasVoted, userVotes, checkVoteStatus } = useAuth();
   const [selected, setSelected] = useState<number[]>([]);
   const [results, setResults] = useState<number[] | null>(null);
   const [mounted, setMounted] = useState(false);
