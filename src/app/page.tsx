@@ -5,6 +5,7 @@ import { supabase } from "@/lib/supabase";
 import { FaRegThumbsUp, FaRegLightbulb, FaGoogle } from "react-icons/fa";
 import { Inter, Roboto_Mono, Sarabun } from "next/font/google";
 import Link from 'next/link';
+import { useRouter } from "next/navigation";
 
 const inter = Inter({ variable: "--font-inter", subsets: ["latin"] });
 const robotoMono = Roboto_Mono({ variable: "--font-roboto-mono", subsets: ["latin"] });
@@ -36,6 +37,7 @@ export default function Home() {
   const [message, setMessage] = useState('');
   const [isEmailAllowed, setIsEmailAllowed] = useState(false);
   const [checkingEmail, setCheckingEmail] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     setMounted(true);
@@ -223,7 +225,7 @@ export default function Home() {
   // Add a fallback signOut function if it's not available from context
   const handleSignOut = async () => {
     await supabase.auth.signOut();
-    window.location.reload();
+    router.push("/");
   };
   
   if (!mounted) {
