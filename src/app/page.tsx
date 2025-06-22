@@ -3,13 +3,14 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/lib/supabase";
 import { FaRegThumbsUp, FaRegLightbulb, FaGoogle } from "react-icons/fa";
-import { Inter, Roboto_Mono, Sarabun } from "next/font/google";
+import { Inter, Roboto_Mono, Sarabun, Prompt } from "next/font/google";
 import Link from 'next/link';
 import { useRouter } from "next/navigation";
 
 const inter = Inter({ variable: "--font-inter", subsets: ["latin"] });
 const robotoMono = Roboto_Mono({ variable: "--font-roboto-mono", subsets: ["latin"] });
 const sarabun = Sarabun({ subsets: ["thai", "latin"], weight: ["400", "700"], variable: "--font-sarabun" });
+const prompt = Prompt({ subsets: ["thai", "latin"], weight: ["400", "700"], variable: "--font-prompt" });
 
 const CHOICES = [
   "แบบที่ 1", "แบบที่ 2", "แบบที่ 3", "แบบที่ 4",
@@ -70,13 +71,18 @@ export default function Home() {
           }
         } else {
             setIsEmailAllowed(true);
-            setMessage(`ยินดีต้อนรับ ${data.full_name} (${data.department})`);
+            setMessage(`<span style='color: #092E3F'> ยินดีต้อนรับ ${data.full_name} (${data.department}) </span>`);
         }
       } catch (err: any) {
-        if (err.name !== 'AbortError') {
-            console.error('Error checking email permission:', err);
-            setIsEmailAllowed(false);
-            setMessage('อีเมล์ของคุณไม่ได้รับอนุญาตให้โหวต กรุณาติดต่อผู้ดูแลระบบ');
+        const isAbort =
+          err?.name === 'AbortError' ||
+          (typeof err?.message === 'string' && err.message.includes('AbortError')) ||
+          (typeof err === 'object' && JSON.stringify(err).includes('AbortError'));
+
+        if (!isAbort) {
+          console.error('Error checking email permission:', err, JSON.stringify(err));
+          setIsEmailAllowed(false);
+          setMessage(err?.message || 'อีเมล์ของคุณไม่ได้รับอนุญาตให้โหวต กรุณาติดต่อผู้ดูแลระบบ');
         }
       } finally {
         if (!signal.aborted) {
@@ -264,7 +270,7 @@ export default function Home() {
       }}
     >
       <div className="w-full max-w-xl flex justify-center items-center bg-white/50 backdrop-blur-sm p-2 rounded-full shadow-md mb-6 sticky top-4 z-50">
-        <span className="font-semibold text-sm text-gray-800">ระบบโหวต ENKKU</span>
+        <span className={`font-normal text-sm text-gray-800 ${prompt.variable}`} style={{ fontFamily: 'Prompt, sans-serif' }}>ระบบโหวต ENKKU VOICE</span>
       </div>
       
       <div className="w-full flex justify-center gap-6 mb-8">
@@ -278,20 +284,20 @@ export default function Home() {
           </div>
           <div className="w-full text-center mt-2">
             <span className={`text-xs sm:text-sm font-normal text-[#000000] drop-shadow ${sarabun.variable}`} style={{ fontFamily: 'Sarabun, sans-serif' }}>
-              ENKKU VOICE SYSTEM โพลสำรวจ ความคิดเห็นเกี่ยวกับ ENKKU เท่านั้น
+            ระบบโพล สำรวจ ความคิดเห็น มุมมอง เสียงวิจารณ์ ทุกเรื่องที่เกี่ยวกับ ENKKU เท่านั้น
             </span>
           </div>
         </div>
       </div>
 
-      <div className="bg-white/90 shadow-xl rounded-2xl px-8 py-10 w-full max-w-xl flex flex-col items-center gap-8 border-t-4 border-[#800000]">
+      <div className="bg-white/40 shadow-xl rounded-2xl px-8 py-10 w-full max-w-xl flex flex-col items-center gap-8 border-t-4 border-[#800000]">
         <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@700&display=swap" rel="stylesheet" />
         
         {/* Login Section */}
         {!user ? (
           <div className="w-full flex flex-col items-center gap-6">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">เข้าสู่ระบบเพื่อโหวต</h2>
-            <p className="text-gray-600 text-center mb-4">
+            <h2 className={`text-2xl font-bold text-black mb-4 ${prompt.variable}`} style={{ fontFamily: 'Prompt, sans-serif' }}>เข้าสู่ระบบเพื่อโหวต</h2>
+            <p className="text-black text-center mb-4">
               กรุณาเข้าสู่ระบบด้วย EMAIL-KKU Account ที่ได้รับอนุญาต
             </p>
             <button
@@ -305,7 +311,7 @@ export default function Home() {
         ) : (
           <>
             {/* User Info */}
-            <div className="w-full flex items-center justify-between bg-gray-50 p-4 rounded-lg">
+            <div className="w-full flex items-center justify-between bg-gray-900/60 p-4 rounded-lg">
               <div className="flex items-center gap-3">
                 {user.user_metadata?.avatar_url && (
                   <img 
@@ -315,8 +321,8 @@ export default function Home() {
                   />
                 )}
                 <div>
-                  <p className="font-semibold text-gray-800">{user.user_metadata?.full_name || user.email}</p>
-                  <p className="text-sm text-gray-600">{user.email}</p>
+                  <p className="font-semibold text-white">{user.user_metadata?.full_name || user.email}</p>
+                  <p className="text-sm text-gray-200">{user.email}</p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
@@ -334,9 +340,11 @@ export default function Home() {
 
             {message && (
               <div className={`text-center mb-0 p-3 rounded-lg w-full ${
-                message.includes('Error') || message.includes('ไม่ได้รับอนุญาต') ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'
+                typeof message === 'string' && (message.includes('Error') || message.includes('ไม่ได้รับอนุญาต'))
+                  ? 'bg-red-100/60 text-red-200'
+                  : 'bg-green-100/60 text-black'
               }`}>
-                {message}
+                <span dangerouslySetInnerHTML={{ __html: message }} />
               </div>
             )}
 
@@ -352,8 +360,8 @@ export default function Home() {
               </div>
             ) : hasVoted ? (
               <div className="w-full flex flex-col items-center gap-6">
-                <h2 className="text-2xl font-bold text-gray-800 mb-2">ขอบคุณสำหรับการโหวต!</h2>
-                <p className="text-gray-600">คุณได้โหวตแล้ว: {userVotes.map(v => CHOICES[v]).join(', ')}</p>
+                <h2 className="text-2xl font-bold text-black mb-2">ขอบคุณสำหรับการโหวต!</h2>
+                <p className="text-black">คุณได้โหวตแล้ว: {userVotes.map(v => CHOICES[v]).join(', ')}</p>
                 
                 {loadingResults ? (
                   <div className="text-center py-4">
@@ -366,8 +374,8 @@ export default function Home() {
                       {CHOICES.map((choice, idx) => (
                         <div key={idx} className="flex flex-col gap-1">
                           <div className="flex justify-between items-center">
-                            <span className="font-medium text-gray-700">{choice}</span>
-                            <span className="font-bold text-gray-800">{results[idx] ?? 0}</span>
+                            <span className="font-medium text-black">{choice}</span>
+                            <span className="font-bold text-black">{results[idx] ?? 0}</span>
                           </div>
                           <div className="w-full h-3 bg-gray-200 rounded-full overflow-hidden">
                             <div
@@ -378,7 +386,7 @@ export default function Home() {
                         </div>
                       ))}
                     </div>
-                    <div className="text-gray-500 mt-2">โหวตรวมทั้งหมด: <span className="font-bold text-gray-800">{displayTotalVotes}</span> ครั้ง</div>
+                    <div className="text-black mt-2">โหวตรวมทั้งหมด: <span className="font-bold text-black">{displayTotalVotes}</span> ครั้ง</div>
                   </>
                 )}
                 <button
@@ -399,7 +407,7 @@ export default function Home() {
                 >
                   <span className="inline-flex items-center gap-2 text-black" style={{ fontFamily: 'Sarabun, sans-serif' }}>
                     <FaRegLightbulb size={45} color="#000000" />
-                    สำรวจความคิดเห็นของคณะผู้บริหาร คณะวิศวกรรมศาสตร์  มข. <br/>
+                    สำรวจความคิดเห็นของคณะผู้บริหาร คณะวิศวกรรมศาสตร์  มข. เรื่องเว็บไซต์คณะฯ<br/>
                   </span>
                   <span className="text-black" style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '1.2rem', fontWeight: 100 }}>
                     1.เลือกดูแบบโครงสร้างเว็บคณะ (ธีม)  เว็บไซต์คณะวิศวกรรม มข.ที่กำลังจะพัฒนา ที่ท่านชื่นชอบและมองว่าเหมาะสมที่สุด 2 แบบ
@@ -437,7 +445,7 @@ export default function Home() {
               
                 <div className="text-center mb-4 inline-flex items-center gap-2 justify-center text-black">
                   <span className={`text-black ${sarabun.variable}`} style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '1.2rem', fontWeight: 100 }}>
-                    2. เลือกแบบเว็บที่ท่านชื่นชอบที่สุด 2 แบบ
+                    2. เลือกโหวตแบบเว็บที่ท่านชื่นชอบที่สุด 2 แบบ
                   </span>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
@@ -445,7 +453,7 @@ export default function Home() {
                     <button
                       key={idx}
                       className={`transition-all duration-150 px-4 py-3 rounded-xl border-2 text-lg font-semibold shadow-sm hover:scale-105
-                        ${selected.includes(idx) ? "bg-[#800000] text-white border-[#800000] shadow-lg" : "bg-white border-gray-200 text-gray-700"}
+                        ${selected.includes(idx) ? "bg-[#800000] text-white border-[#800000] shadow-lg" : "bg-black/40 border-gray-700 text-gray-200"}
                         ${(selected.length === 2 && !selected.includes(idx) && idx !== 7) || (selected.includes(7) && idx !== 7) ? "opacity-50 cursor-not-allowed" : ""}`}
                       onClick={() => handleSelect(idx)}
                       disabled={(selected.length === 2 && !selected.includes(idx) && idx !== 7) || (selected.includes(7) && idx !== 7)}
@@ -472,7 +480,7 @@ export default function Home() {
             )}
           </>
         )}
-</div>
+      </div>
     </div>
   );
 }
