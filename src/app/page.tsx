@@ -418,10 +418,10 @@ export default function Home() {
                   {[1,2,3,4,5,6,7].map((num) => {
                     const links = [
                       "https://unipix-project.netlify.app/index-two",
-                      "https://templateup.site/eduqe/?storefront=envato-elements",
-                      "https://fse.jegtheme.com/schwimm/?storefront=envato-elements",
+                      "https://edusmart.physcode.com/demo-main/",
+                      "https://wp.rrdevs.net/edcare/university/",
                       "https://ninzio.com/edukul/?storefront=envato-elements",
-                      "https://themazine.com/newwp/edutech/?storefront=envato-elements",
+                      "https://themexriver.com/wp/edrio/home-5/",
                       "https://www.wordpress.codeinsolution.com/dricademy/?storefront=envato-elements",
                       "https://ongkorn3.seeddemo.com/"
                     ];
