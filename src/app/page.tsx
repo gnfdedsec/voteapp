@@ -407,7 +407,7 @@ export default function Home() {
                 >
                   <span className="inline-flex items-center gap-2 text-black" style={{ fontFamily: 'Sarabun, sans-serif' }}>
                     <FaRegLightbulb size={45} color="#000000" />
-                    สำรวจความคิดเห็นของคณะผู้บริหาร คณะวิศวกรรมศาสตร์  มข. เรื่องเว็บไซต์คณะฯ<br/>
+                    สำรวจความคิดเห็น รูปแบบ ธีม เว็บไซต์ ของคณะวิศวกรรมศาสตร์ มหาวิทยาลัยขอนแก่น <br/>
                   </span>
                   <span className="text-black" style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '1.2rem', fontWeight: 100 }}>
                     1.เลือกดูแบบโครงสร้างเว็บคณะ (ธีม)  เว็บไซต์คณะวิศวกรรม มข.ที่กำลังจะพัฒนา ที่ท่านชื่นชอบและมองว่าเหมาะสมที่สุด 2 แบบ
