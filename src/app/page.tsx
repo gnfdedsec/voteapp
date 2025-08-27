@@ -270,7 +270,7 @@ export default function Home() {
       }}
     >
       <div className="w-full max-w-xl flex justify-center items-center bg-white/50 backdrop-blur-sm p-2 rounded-full shadow-md mb-6 sticky top-4 z-50">
-        <span className={`font-normal text-sm text-gray-800 ${prompt.variable}`} style={{ fontFamily: 'Prompt, sans-serif' }}>ระบบโหวต ENKKU VOICE</span>
+        <span className={`font-normal text-sm text-gray-800 ${prompt.variable}`} style={{ fontFamily: 'Prompt, sans-serif' }}>ระบบโหวต ENKKU VOICES</span>
       </div>
       
       <div className="w-full flex justify-center gap-6 mb-8">
